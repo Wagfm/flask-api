@@ -8,7 +8,7 @@ from repositories.user import UserRepository
 
 class TestUserRepository(unittest.TestCase):
     def setUp(self):
-        self._user_repository = UserRepository("/home/wagner/.databases/flask-api-test.db")
+        self._user_repository = UserRepository()
         self._user_repository.clear_table()
         self._test_user_dto = self._get_test_user_()
 

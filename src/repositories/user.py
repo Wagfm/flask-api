@@ -1,5 +1,4 @@
 import datetime
-import os
 import sqlite3
 from typing import Any
 
@@ -11,7 +10,7 @@ from repositories.base import BaseRepository
 
 class UserRepository(BaseRepository):
 
-    def __init__(self, database_path: str = "/home/wagner/.databases/flask-api-dev.db"):
+    def __init__(self, database_path: str = "flask-api-dev.db"):
         super().__init__()
         self._DATABASE_PATH = database_path
 
