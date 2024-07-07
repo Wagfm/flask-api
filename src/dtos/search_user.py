@@ -1,9 +1,13 @@
-from pydantic import field_validator
+from typing import Annotated, Any
+
+from pydantic import field_validator, Field
 
 from dtos.base_user import BaseUserDto
 
 
 class SearchUserDto(BaseUserDto):
+    id: Annotated[Any | None, Field(default=None, validate_default=False)]
+
     @field_validator("username")
     @classmethod
     def validate_username(cls, username: str | None) -> str | None:

@@ -1,4 +1,5 @@
 import datetime
+import os
 import sqlite3
 from typing import Any
 
@@ -17,7 +18,6 @@ class UserRepository(BaseRepository):
         @self._connect
         def setup_table(cursor: sqlite3.Cursor) -> None:
             create_table_query = UserModel.create_table_query()
-            cursor.execute("DROP TABLE IF EXISTS users")
             cursor.execute(create_table_query)
 
         setup_table()

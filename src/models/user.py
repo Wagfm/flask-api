@@ -44,3 +44,7 @@ class UserModel(Model):
                 updated_at DATETIME NOT NULL
             );
         """
+
+    @staticmethod
+    def get_unique_fields() -> list[str]:
+        return ["username", "email"]
