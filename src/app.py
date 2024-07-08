@@ -11,7 +11,7 @@ def main() -> None:
     root_route = RootRoute()
     root_route.register_blueprint(BaseRoute("users_route", controller), url_prefix="/users")
     app.register_blueprint(root_route)
-    app.run("127.0.0.1", debug=True)
+    app.run("0.0.0.0", debug=True)
 
 
 if __name__ == '__main__':
