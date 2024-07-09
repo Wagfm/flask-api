@@ -1,13 +1,13 @@
 from typing import Annotated
 
-from pydantic import field_validator, Field
+from pydantic import field_validator, Field, model_validator
 
 from dtos.base_user import BaseUserDto
 
 
 class UpdateUserDto(BaseUserDto):
     password: Annotated[str | None, Field(default=None, validate_default=True)]
-    is_active: Annotated[bool | None, Field(default=True)]
+    is_active: Annotated[bool | None, Field(default=None, validate_default=True)]
 
     @field_validator("username")
     @classmethod
@@ -36,3 +36,9 @@ class UpdateUserDto(BaseUserDto):
         if password is None:
             return None
         return cls.base_password_validation(password)
+
+    @model_validator(mode="after")
+    def validate_at_least_one_field(self) -> None:
+        values = self.model_dump().values()
+        if all([value is None for value in values]):
+            raise ValueError("You must provide at least one field")

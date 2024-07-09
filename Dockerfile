@@ -6,6 +6,8 @@ LABEL authors="wagner"
 
 ENV PYTHONPATH="/app/src"
 
+ENV PYTHONDONTWRITEBYTECODE="false"
+
 WORKDIR /app
 
 COPY requirements.txt .
@@ -16,4 +18,4 @@ COPY . .
 
 EXPOSE 5000/tcp
 
-CMD [ "python", "-B", "src/app.py" ]
+CMD [ "python", "src/app.py" ]

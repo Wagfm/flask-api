@@ -1,5 +1,6 @@
 import unittest
 
+from app import FlaskAppWrapper
 from dtos.create_user import CreateUserDto
 from dtos.update_user import UpdateUserDto
 from exceptions.database import UniqueAttributeException, EntityNotFoundException
@@ -9,7 +10,8 @@ from services.users import UsersService
 
 class TestUsersService(unittest.TestCase):
     def setUp(self):
-        self._service = UsersService()
+        self._app = FlaskAppWrapper()
+        self._service = UsersService(self._app.get_cache)
         self._userRepository = UserRepository()
 
     def tearDown(self):

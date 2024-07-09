@@ -1,6 +1,7 @@
 from typing import Any
 
 from flask import Response, request
+from flask_caching import Cache
 
 from controllers.base import BaseController
 from dtos.create_user import CreateUserDto
@@ -11,9 +12,9 @@ from services.users import UsersService
 
 class UsersController(BaseController):
 
-    def __init__(self):
+    def __init__(self, _cache: Cache):
         super().__init__()
-        self._service = UsersService()
+        self._service = UsersService(_cache)
 
     def create(self) -> Response:
         desired_user_data = request.json
