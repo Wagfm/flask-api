@@ -2,10 +2,13 @@ from typing import Any
 
 from flask import Response, request
 from flask_caching import Cache
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from controllers.base import BaseController
 from dtos.create_user import CreateUserDto
+from dtos.login import LoginDto
 from dtos.update_user import UpdateUserDto
+from exceptions.auth import AuthenticationException
 from exceptions.database import EntityNotFoundException
 from services.users import UsersService
 
@@ -66,3 +69,22 @@ class UsersController(BaseController):
         except Exception as exception:
             return self.build_json_response({"message": str(exception)}, 500)
         return self.build_json_response({"user": deleted_user_dto.model_dump()}, 200)
+
+    def login(self) -> Response:
+        login_data = request.json
+        try:
+            login_dto = LoginDto(**login_data)
+            token = self._service.login(login_dto)
+        except ValueError as error:
+            return self.build_json_response({"message": str(error)}, 400)
+        except EntityNotFoundException as exception:
+            return self.build_json_response({"message": str(exception)}, 404)
+        except AuthenticationException as exception:
+            return self.build_json_response({"message": str(exception)}, 401)
+        except Exception as exception:
+            return self.build_json_response({"message": str(exception)}, 422)
+        return self.build_json_response({"token": token}, 201)
+
+    @jwt_required()
+    def protected(self):
+        return {"message": f"Logged in as {get_jwt_identity()}"}

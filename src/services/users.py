@@ -1,10 +1,15 @@
+import datetime
 from typing import Any
 
+import bcrypt
 from flask_caching import Cache
+from flask_jwt_extended import create_access_token
 
 from dtos.base import BaseDto
+from dtos.login import LoginDto
 from dtos.read_user import ReadUserDto
 from dtos.search_user import SearchUserDto
+from exceptions.auth import AuthenticationException
 from exceptions.database import UniqueAttributeException, EntityNotFoundException
 from models.user import UserModel
 from repositories.user import UserRepository
@@ -62,3 +67,13 @@ class UsersService(BaseService):
                 continue
             if self._repository.exists_by(SearchUserDto(**{unique_field: dto_data[unique_field]})):
                 raise UniqueAttributeException(unique_field)
+
+    def login(self, login_dto: LoginDto) -> str:
+        user_model = self._repository.get_by_attrs(SearchUserDto(email=login_dto.email))
+        if user_model is None:
+            raise EntityNotFoundException("email", login_dto.email)
+        password_matches = bcrypt.checkpw(login_dto.password.encode(), user_model.to_dict()["hashed_password"].encode())
+        if not password_matches:
+            raise AuthenticationException()
+        token = create_access_token(identity=user_model.to_dict()["email"], expires_delta=datetime.timedelta(hours=1))
+        return token

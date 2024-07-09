@@ -9,6 +9,9 @@ bcrypt = "*"
 pydantic = "*"
 faker = "*"
 flask-caching = "*"
+python-dotenv = "*"
+flask-jwt-extended = "*"
+pyjwt = "*"
 
 [dev-packages]
 
